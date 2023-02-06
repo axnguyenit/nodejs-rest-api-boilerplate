@@ -1,14 +1,12 @@
 import { Service } from 'typedi';
 
-import type { User } from '../user/entities/user.entity';
-
-export interface IAuthService {
-  findOne(id: string): Promise<User | undefined>;
-}
+import { UserRepository } from '../user';
+import type { AuthRegisterDto } from './dto';
 
 @Service()
-export class AuthService implements IAuthService {
+export class AuthService {
   constructor() {}
+
   // eslint-disable-next-line max-len
   // @Logger(__filename) private log: LoggerInterface // @EventDispatcher() private eventDispatcher: EventDispatcherInterface, // @OrmRepository() private userRepository: UserRepository,
 
@@ -17,13 +15,17 @@ export class AuthService implements IAuthService {
   //     return this.userRepository.find({ relations: ['pets'] });
   // }
 
-  public findOne(id: string): Promise<User | undefined> {
-    // return this.userRepository.findOne({ id });
-    return Promise.resolve<User>({
-      id,
-      email: 'axnguyen.it@gmail.com',
-      username: '',
-    });
+  async register(dto: AuthRegisterDto) {
+    console.info('>>>>>>>>>>>', dto);
+    // try {
+    //   await this.userRepository.save(dto);
+    // } catch (error) {
+    //   console.log('>>>>>>>>>>>', error);
+    // }
+
+    const user = UserRepository.create(dto);
+
+    return await UserRepository.save(user);
   }
 
   // public async create(user: User): Promise<User> {

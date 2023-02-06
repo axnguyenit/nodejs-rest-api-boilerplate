@@ -1,10 +1,18 @@
-import app from './app';
+import 'dotenv/config';
 
-try {
-  app.listen(8080, (): void => {
-    console.info(`Server is running on http://127.0.0.1:8080`);
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} catch (error: any) {
-  console.error(`Error occurred: ${error.message}`);
-}
+import { App } from './app';
+import { DI } from './providers';
+
+const app = new App(DI.instance.configService, DI.instance.databaseService);
+
+void (async function () {
+  try {
+    await app.connectDatabase();
+
+    console.info('Connect to database successfully!');
+  } catch (error) {
+    console.error(error);
+  }
+
+  app.listen();
+})();

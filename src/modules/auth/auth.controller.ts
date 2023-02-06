@@ -12,8 +12,8 @@ import {
 } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
-import { DI } from '../../providers/service';
-import type { IAuthService } from './auth.service';
+import { DI } from '../../providers/di';
+import type { AuthService } from './auth.service';
 import {
   AuthConfirmEmailDto,
   AuthEmailLoginDto,
@@ -37,7 +37,7 @@ export class UserResponse {
 @JsonController('/auth/')
 @OpenAPI({ security: [{ basicAuth: [] }] })
 export class AuthController {
-  authService: IAuthService;
+  authService: AuthService;
 
   constructor() {
     this.authService = DI.instance.authService;
@@ -47,6 +47,10 @@ export class AuthController {
   // @HttpCode(StatusCodes.OK)
   public login(@Body() _loginDto: AuthEmailLoginDto) {
     // return this.authService.validateLogin(loginDto, false);
+
+    return {
+      email: 'sds',
+    };
   }
 
   @Post('admin/email/login')
@@ -57,8 +61,8 @@ export class AuthController {
 
   @Post('email/register')
   // @HttpCode(StatusCodes.CREATED)
-  register(@Body() _createUserDto: AuthRegisterDto) {
-    // return this.authService.register(createUserDto);
+  register(@Body() createUserDto: AuthRegisterDto) {
+    return this.authService.register(createUserDto);
   }
 
   @Post('email/confirm')

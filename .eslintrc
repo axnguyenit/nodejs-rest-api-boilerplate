@@ -58,6 +58,8 @@
     "unicorn/prefer-module": "off",
     "unicorn/prefer-node-protocol": "off",
     "unicorn/numeric-separators-style": "off",
+    "unicorn/no-this-assignment": "off",
+
     "sonarjs/no-duplicate-string": "off",
     "import/no-unresolved": ["error", { "ignore": ["^~/*"] }],
     "prettier/prettier": [
@@ -211,7 +213,7 @@
       },
       {
         "selector": "variable",
-        "format": ["camelCase", "UPPER_CASE"]
+        "format": ["camelCase", "UPPER_CASE", "PascalCase"]
       },
       {
         "selector": "interface",
@@ -345,7 +347,6 @@
     "no-new-func": "error",
     "no-new-wrappers": "error",
     "no-redeclare": "error",
-    "no-return-await": "error",
     "no-sequences": "error",
     "no-sparse-arrays": "error",
     "no-template-curly-in-string": "error",
