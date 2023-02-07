@@ -1,6 +1,9 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
 
+import type { Role } from '../../role';
+import { Status } from '../../status/entities/status.entity';
+
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
   @IsOptional()
@@ -16,10 +19,19 @@ export class UpdateUserDto {
   socialId?: string | null;
 
   @IsOptional()
-  firstName?: string | null;
+  fullName?: string | null;
 
   @IsOptional()
-  lastName?: string | null;
+  // @Validate(IsExist, ['Role', 'id'], {
+  //   message: 'roleNotExists',
+  // })
+  role?: Role | null;
+
+  @IsOptional()
+  // @Validate(IsExist, ['Status', 'id'], {
+  //   message: 'statusNotExists',
+  // })
+  status?: Status;
 
   hash?: string | null;
 }

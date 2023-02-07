@@ -1,54 +1,73 @@
 import * as bcrypt from 'bcryptjs';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import {
   AfterLoad,
   BeforeInsert,
   BeforeUpdate,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
+import { EntityHelper } from '../../../utils';
+import { AuthProviders } from '../../auth';
+import { Role } from '../../role/entities/role.entity';
+import { Status } from '../../status/entities/status.entity';
+
 @Entity({ name: 'users' })
-export class User {
-  public static hashPassword(password: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      bcrypt.hash(password, 10, (err, hash) => {
-        if (err) {
-          return reject(err);
-        }
+export class User extends EntityHelper {
+  // public static hashPassword(password: string): Promise<string> {
+  //   return new Promise((resolve, reject) => {
+  //     bcrypt.hash(password, 10, (err, hash) => {
+  //       if (err) {
+  //         return reject(err);
+  //       }
 
-        resolve(hash);
-      });
-    });
-  }
+  //       resolve(hash);
+  //     });
+  //   });
+  // }
 
-  public static comparePassword(
-    user: User,
-    password: string,
-  ): Promise<boolean> {
-    return new Promise((resolve, _reject) => {
-      bcrypt.compare(password, user.password, (err, res) => {
-        resolve(res === true);
-      });
-    });
-  }
+  // public static comparePassword(
+  //   user: User,
+  //   password: string,
+  // ): Promise<boolean> {
+  //   return new Promise((resolve, _reject) => {
+  //     bcrypt.compare(password, user.password, (err, res) => {
+  //       resolve(res === true);
+  //     });
+  //   });
+  // }
 
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 
   @IsNotEmpty()
-  @Column({ name: 'last_name' })
+  @Column()
   public fullName: string;
 
   @IsNotEmpty()
   @Column({ unique: true })
   public email: string;
 
-  @IsNotEmpty()
-  @Column()
-  public username: string;
+  @Column({ default: AuthProviders.Email })
+  @Expose({ groups: ['me', 'admin'] })
+  provider: string;
+
+  @ManyToOne(() => Role, {
+    eager: true,
+  })
+  role: Role;
+
+  @ManyToOne(() => Status, {
+    eager: true,
+  })
+  status?: Status;
 
   @IsNotEmpty()
   @Column()
@@ -71,4 +90,13 @@ export class User {
       this.password = await bcrypt.hash(this.password, salt);
     }
   }
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

@@ -14,8 +14,5 @@ export class AuthSocialLoginDto {
   // @IsNotEmpty()
   // socialType: AuthProviders;
   @Allow()
-  firstName?: string;
-
-  @Allow()
-  lastName?: string;
+  fullName?: string;
 }

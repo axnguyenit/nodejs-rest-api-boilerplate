@@ -7,6 +7,7 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUi from 'swagger-ui-express';
 
 import type { ConfigService } from './providers';
+
 export class Swagger {
   constructor(private app: Application, private configService: ConfigService) {}
 

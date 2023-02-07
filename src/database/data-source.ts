@@ -11,8 +11,8 @@ const AppDataSource = new DataSource({
   synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
   dropSchema: false,
   logging: process.env.NODE_ENV !== 'production',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  entities: [__dirname + '/../**/*.entity.{ts,js}'],
+  migrations: [__dirname + '/migrations/**/*.{ts,js}'],
 
   extra: {
     // based on https://node-postgres.com/apis/pool

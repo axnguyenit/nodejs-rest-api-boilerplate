@@ -1,14 +1,17 @@
-import type { StatusCode } from 'http-status-code';
-import { HttpError } from 'routing-controllers';
+import type { StatusCodes } from 'http-status-codes';
 
-export interface IErrorDetails {
+export interface ErrorDetails {
   message: string;
   key: string;
   code: string;
 }
 
-export class AppError extends HttpError {
-  constructor(statusCode: StatusCode, errors: Array<IErrorDetails>) {
-    super(statusCode, errors[0].message);
+export class AppError extends Error {
+  private errors: Array<ErrorDetails>;
+
+  constructor(statusCode: StatusCodes, errors: Array<ErrorDetails>) {
+    super(statusCode.toString());
+
+    this.errors = errors;
   }
 }

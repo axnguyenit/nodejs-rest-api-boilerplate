@@ -6,11 +6,7 @@ import { IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 export class AuthUpdateDto {
   @IsOptional()
   @IsNotEmpty({ message: 'mustBeNotEmpty' })
-  firstName?: string;
-
-  @IsOptional()
-  @IsNotEmpty({ message: 'mustBeNotEmpty' })
-  lastName?: string;
+  fullName?: string;
 
   @IsOptional()
   @IsNotEmpty()

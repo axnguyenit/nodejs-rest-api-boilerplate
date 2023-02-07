@@ -1,1 +1,1 @@
-export * from './logger.decorator';
+export {};

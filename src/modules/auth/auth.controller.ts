@@ -1,11 +1,11 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-// import { StatusCodes } from 'http-status-code';
+import { StatusCodes } from 'http-status-codes';
 import {
   Authorized,
   Body,
   Delete,
   Get,
-  // HttpCode,
+  HttpCode,
   JsonController,
   Patch,
   Post,
@@ -29,9 +29,6 @@ export class UserResponse {
   @IsEmail()
   @IsNotEmpty()
   public email!: string;
-
-  @IsNotEmpty()
-  public username!: string;
 }
 
 @JsonController('/auth/')
@@ -44,41 +41,37 @@ export class AuthController {
   }
 
   @Post('email/login')
-  // @HttpCode(StatusCodes.OK)
-  public login(@Body() _loginDto: AuthEmailLoginDto) {
-    // return this.authService.validateLogin(loginDto, false);
-
-    return {
-      email: 'sds',
-    };
+  @HttpCode(StatusCodes.OK)
+  public login(@Body() loginDto: AuthEmailLoginDto) {
+    return this.authService.validateLogin(loginDto, false);
   }
 
   @Post('admin/email/login')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   public adminLogin(@Body() _loginDTO: AuthEmailLoginDto) {
     // return this.authService.validateLogin(loginDTO, true);
   }
 
   @Post('email/register')
-  // @HttpCode(StatusCodes.CREATED)
+  @HttpCode(StatusCodes.CREATED)
   register(@Body() createUserDto: AuthRegisterDto) {
     return this.authService.register(createUserDto);
   }
 
   @Post('email/confirm')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   confirmEmail(@Body() _confirmEmailDto: AuthConfirmEmailDto) {
     // return this.authService.confirmEmail(confirmEmailDto.hash);
   }
 
   @Post('forgot/password')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   forgotPassword(@Body() _forgotPasswordDto: AuthForgotPasswordDto) {
     // return this.authService.forgotPassword(forgotPasswordDto.email);
   }
 
   @Post('reset/password')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   resetPassword(@Body() _resetPasswordDto: AuthResetPasswordDto) {
     // return this.authService.resetPassword(
     //   resetPasswordDto.hash,
@@ -88,21 +81,21 @@ export class AuthController {
 
   @Authorized()
   @Get('me')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   public me() {
     // return this.authService.me(request.user);
   }
 
   @Authorized()
   @Patch('me')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   public update(@Body() _userDto: AuthUpdateDto) {
     // return this.authService.update(request.user, userDto);
   }
 
   @Authorized()
   @Delete('me')
-  // @HttpCode(StatusCodes.OK)
+  @HttpCode(StatusCodes.OK)
   public delete() {
     // return this.authService.softDelete(request.user);
   }

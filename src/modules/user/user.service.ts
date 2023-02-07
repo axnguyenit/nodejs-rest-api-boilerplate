@@ -1,28 +1,29 @@
-import { Service } from 'typedi';
+import type { Repository } from 'typeorm';
 
+import type { EntityCondition, PaginationOptions } from '../../types';
 import type { CreateUserDto, UpdateUserDto } from './dto';
+import type { User } from './entities';
 
-@Service()
 export class UserService {
-  constructor() {}
+  constructor(private userRepository: Repository<User>) {}
 
-  create(_createProfileDto: CreateUserDto) {
-    // return this.userRepository.save(
-    //   this.userRepository.create(createProfileDto),
-    // );
+  create(createProfileDto: CreateUserDto) {
+    return this.userRepository.save(
+      this.userRepository.create(createProfileDto),
+    );
   }
 
-  // findManyWithPagination(paginationOptions: IPaginationOptions) {
-  //   return this.userRepository.find({
-  //     skip: (paginationOptions.page - 1) * paginationOptions.limit,
-  //     take: paginationOptions.limit,
-  //   });
-  // }
+  findManyWithPagination(paginationOptions: PaginationOptions) {
+    return this.userRepository.find({
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+    });
+  }
 
-  findOne() {
-    // return this.userRepository.findOneOrFail({
-    //   where: fields,
-    // });
+  findOne(fields: EntityCondition<User>): Promise<User> {
+    return this.userRepository.findOneOrFail({
+      where: fields,
+    });
   }
 
   update(_id: string, _updateProfileDto: UpdateUserDto) {
@@ -34,7 +35,7 @@ export class UserService {
     // );
   }
 
-  async softDelete(_id: string): Promise<void> {
-    // await this.userRepository.softDelete(id);
+  async softDelete(id: string): Promise<void> {
+    await this.userRepository.softDelete(id);
   }
 }
