@@ -155,10 +155,7 @@
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-angle-bracket-type-assertion": "off",
-    "@typescript-eslint/no-empty-function": [
-      "error",
-      { "allow": ["constructors"] }
-    ],
+    "@typescript-eslint/no-empty-function": ["off"],
     "@typescript-eslint/no-unnecessary-condition": "off",
     "@typescript-eslint/no-confusing-non-null-assertion": "warn",
     "@typescript-eslint/no-duplicate-enum-values": "error",

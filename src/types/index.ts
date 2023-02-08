@@ -1,2 +1,1 @@
-export * from './entity-condition.type';
-export * from './pagination-options';
+export * from './pagination-options.type';

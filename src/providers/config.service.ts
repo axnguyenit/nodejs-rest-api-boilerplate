@@ -1,5 +1,5 @@
 export class ConfigService {
-  public get(path: string) {
+  public get<T = string | boolean>(path: string): T {
     const value = process.env[path];
 
     if (value === undefined) {
@@ -7,9 +7,9 @@ export class ConfigService {
     }
 
     if (['false', 'true'].includes(value)) {
-      return value === 'true';
+      return <T>(value === 'true');
     }
 
-    return value;
+    return <T>value;
   }
 }

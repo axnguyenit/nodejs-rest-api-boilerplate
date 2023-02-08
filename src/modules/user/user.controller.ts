@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import {
-  Authorized,
+  // Authorized,
   Body,
   Delete,
   Get,
@@ -15,8 +15,7 @@ import {
 import { infinityPagination } from '../../utils';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
-
-@Authorized()
+// @Authorized()
 @JsonController('/users/')
 export class UsersController {
   constructor(private readonly userService: UserService) {}
@@ -49,7 +48,7 @@ export class UsersController {
   @Get(':id')
   @HttpCode(StatusCodes.OK)
   findOne(@Param('id') id: string) {
-    return this.userService.findOne({ id });
+    return this.userService.findById(id);
   }
 
   @Patch(':id')
@@ -60,6 +59,6 @@ export class UsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.softDelete(id);
+    return this.userService.delete(id);
   }
 }

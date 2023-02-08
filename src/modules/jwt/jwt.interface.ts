@@ -6,9 +6,9 @@ export enum JwtSecretRequestType {
 }
 
 export interface JwtServiceOptions {
-  secret?: string | Buffer;
+  secret: string | Buffer;
   publicKey?: string | Buffer;
-  privateKey: Secret;
+  privateKey?: Secret;
   signOptions?: SignOptions;
   verifyOptions?: VerifyOptions;
 }

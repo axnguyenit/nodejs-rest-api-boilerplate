@@ -3,17 +3,14 @@ import express from 'express';
 import type { Action } from 'routing-controllers';
 import { useExpressServer } from 'routing-controllers';
 
-import type { TypeOrmService } from './database/typeorm.service';
 import type { ConfigService } from './providers';
 import { Swagger } from './swagger';
+import { logger } from './utils';
 
 export class App {
   private app: Application;
 
-  constructor(
-    private configService: ConfigService,
-    private database: TypeOrmService,
-  ) {
+  constructor(private configService: ConfigService) {
     this.app = express();
 
     this.initialize();
@@ -23,13 +20,24 @@ export class App {
   public listen() {
     try {
       this.app.listen(this.configService.get('PORT'), () => {
-        console.info(
+        logger.info(
           `Server is running on http://[::1]:${this.configService.get('PORT')}`,
         );
+        const a = {
+          clear: true,
+          timestamp: {
+            clear: true,
+            timestamp: true,
+          },
+        };
+        logger.info(a);
+        logger.info(a);
+        logger.info(a);
+        logger.error('thisi is log');
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error(`Error occurred: ${error.message}`);
+      logger.error(`Error occurred: ${error.message}`);
     }
   }
 
@@ -45,10 +53,6 @@ export class App {
         // return database.findUserByToken(token).roles.in(roles);
         false,
     });
-  }
-
-  public async connectDatabase() {
-    await this.database.connect();
   }
 
   private initializeSwagger() {

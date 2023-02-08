@@ -34,8 +34,7 @@ export class Swagger {
         },
         security: [{ accessToken: [], userProfileToken: [] }],
         info: {
-          // eslint-disable-next-line @typescript-eslint/keyword-spacing
-          title: <string>this.configService.get('APP_NAME'),
+          title: this.configService.get<string>('APP_NAME'),
           version: '1.0',
         },
         paths: {

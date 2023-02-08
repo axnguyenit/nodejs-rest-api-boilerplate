@@ -1,37 +1,36 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsOptional, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
-import type { Role } from '../../role';
-import { Status } from '../../status/entities/status.entity';
+import { UserStatus } from '../../../enums';
 
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
-  @IsOptional()
+  @IsNotEmpty()
   @IsEmail()
-  email?: string | null;
-
   @IsOptional()
+  email?: string;
+
+  @IsNotEmpty()
+  @IsOptional()
+  fullName?: string;
+
+  @IsNotEmpty()
   @MinLength(6)
+  @IsOptional()
   password?: string;
 
-  provider?: string;
-
-  socialId?: string | null;
-
+  @IsNotEmpty()
   @IsOptional()
-  fullName?: string | null;
+  status?: UserStatus;
 
+  @IsNotEmpty()
   @IsOptional()
-  // @Validate(IsExist, ['Role', 'id'], {
-  //   message: 'roleNotExists',
-  // })
-  role?: Role | null;
-
-  @IsOptional()
-  // @Validate(IsExist, ['Status', 'id'], {
-  //   message: 'statusNotExists',
-  // })
-  status?: Status;
-
-  hash?: string | null;
+  @IsString()
+  hash?: string;
 }

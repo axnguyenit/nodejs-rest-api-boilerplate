@@ -1,34 +1,31 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-
-import type { Role } from '../../role/entities/role.entity';
-import type { Status } from '../../status/entities/status.entity';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
   @IsNotEmpty()
   @IsEmail()
-  readonly email?: string;
+  email: string;
 
   @MinLength(6)
-  readonly password?: string;
+  password: string;
 
-  readonly provider?: string;
-
-  readonly socialId?: string;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  socialId?: string;
 
   @IsNotEmpty()
-  readonly fullName?: string;
+  @IsString()
+  fullName: string;
 
-  readonly hash?: string | null;
-
-  // @Validate(IsExist, ['Role', 'id'], {
-  //   message: 'roleNotExists',
-  // })
-  readonly role: Role;
-
-  // @Validate(IsExist, ['Status', 'id'], {
-  //   message: 'statusNotExists',
-  // })
-  readonly status: Status;
+  @IsNotEmpty()
+  @IsString()
+  hash: string;
 }
