@@ -85,6 +85,7 @@
       "error",
       { "default": "generic", "readonly": "generic" }
     ],
+
     // "@typescript-eslint/ban-types": [
     //   "error",
     //   {
@@ -240,7 +241,6 @@
     /**
      * plugin:eslint
      */
-    "no-await-in-loop": "error",
     "padding-line-between-statements": [
       "error",
       { "blankLine": "always", "prev": "*", "next": "return" },
