@@ -6,15 +6,23 @@ import colors from 'picocolors';
 
 export type LogType = 'error' | 'info';
 export type LogLevel = LogType | 'silent';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LogMessage = any;
+
 export interface Logger {
-  info(msg: string | Record<string, unknown>): void;
-  error(msg: string | Record<string, unknown>): void;
+  info(msg: LogMessage, options?: LogOptions): void;
+  error(msg: LogMessage, options?: LogOptions): void;
 }
 export const LogLevels: Record<LogLevel, number> = {
   silent: 0,
   error: 1,
   info: 2,
 };
+
+interface LogOptions {
+  prefix?: string;
+}
 
 let lastType: LogType | undefined;
 let lastMessage: string | undefined;
@@ -31,26 +39,21 @@ function clearScreen() {
 export interface LoggerOptions {
   prefix?: string;
   isAllowClearScreen?: boolean;
-  customLogger?: Logger;
 }
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function createLogger(
   level: LogLevel = 'info',
   _options: LoggerOptions = {},
 ): Logger {
-  if (_options.customLogger) {
-    return _options.customLogger;
-  }
-
-  const { prefix = '[ax]', isAllowClearScreen = true } = _options;
+  const { isAllowClearScreen = true } = _options;
   const thresh = LogLevels[level];
   const canClearScreen =
     isAllowClearScreen && process.stdout.isTTY && !process.env.CI;
 
   const clear = canClearScreen ? clearScreen : () => {};
 
-  function output(type: LogType, msg: string | Record<string, unknown>) {
+  function output(type: LogType, msg: LogMessage, options?: LogOptions) {
+    const prefix = options?.prefix ? `[${options?.prefix}]` : '[ax]';
     const objString = JSON.stringify(msg);
 
     if (thresh >= LogLevels[type]) {
@@ -59,10 +62,10 @@ function createLogger(
       const format = () => {
         const message =
           type === 'info'
-            ? colors.blue(colors.bold(`${prefix} >>>> [${objString}]`))
-            : colors.red(colors.bold(`${prefix} >>>> [${objString}]`));
+            ? colors.blue(colors.bold(`${prefix} [${objString}]`))
+            : colors.red(colors.bold(`${prefix} [${objString}]`));
 
-        return `${colors.dim(new Date().toLocaleTimeString())} ${message} `;
+        return `${colors.dim(new Date().toLocaleTimeString())} ${message}`;
       };
 
       if (canClearScreen) {
@@ -83,11 +86,11 @@ function createLogger(
   }
 
   const logger: Logger = {
-    info(msg) {
-      output('info', msg);
+    info(msg, opts) {
+      output('info', msg, opts);
     },
-    error(msg) {
-      output('error', msg);
+    error(msg, opts) {
+      output('error', msg, opts);
     },
   };
 

@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { StatusCodes } from 'http-status-codes';
@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { ErrorCode, UserRole } from '../../enums';
 import { AppError } from '../../errors';
 import { DI } from '../../providers';
-import { randomStringGenerator } from '../../utils';
+import { excludeFields, logger, randomStringGenerator } from '../../utils';
 import type { JwtService } from '../jwt';
 import type { UserService } from '../user';
 import { AuthProviders } from './auth-providers.enum';
@@ -25,6 +25,8 @@ export class AuthService {
   async validateLogin(loginDto: AuthEmailLoginDto, onlyAdmin: boolean) {
     const user = await this.userService.findByEmail(loginDto.email);
 
+    logger.info(user);
+
     if (
       !user ||
       (user &&
@@ -36,7 +38,7 @@ export class AuthService {
         {
           key: 'user',
           message: `User Not Found`,
-          code: ErrorCode.NOT_FOUND,
+          code: ErrorCode.NotFound,
         },
       ]);
     }
@@ -46,7 +48,7 @@ export class AuthService {
         {
           key: 'sign-in provider',
           message: `Need sign-in via ${user.provider} provider`,
-          code: ErrorCode.INVALID_REQUEST,
+          code: ErrorCode.InvalidRequest,
         },
       ]);
     }
@@ -61,7 +63,7 @@ export class AuthService {
         {
           key: 'password',
           message: `Incorrect Password`,
-          code: ErrorCode.INVALID_FIELD,
+          code: ErrorCode.InvalidField,
         },
       ]);
     }
@@ -71,10 +73,15 @@ export class AuthService {
       role: user.role,
     });
 
-    return { token, user };
+    const userExcludedFields = excludeFields<User, keyof User>(user, [
+      'password',
+      'hash',
+    ]);
+
+    return { token, user: userExcludedFields };
   }
 
-  async register(dto: AuthRegisterDto) {
+  async register(dto: AuthRegisterDto): Promise<User> {
     const hash = crypto
       .createHash('sha256')
       .update(randomStringGenerator())

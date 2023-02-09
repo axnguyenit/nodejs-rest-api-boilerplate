@@ -1,8 +1,10 @@
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { NotFoundError } from 'routing-controllers';
 
 import { DI } from '../../providers';
 import type { PaginationOptions } from '../../types';
+import { excludeFields } from '../../utils';
 import type { CreateUserDto, UpdateUserDto } from './dto';
 
 export class UserService {
@@ -32,9 +34,15 @@ export class UserService {
   }
 
   async findById(id: string) {
-    return await this.prisma.user.findUnique({
-      where: { id },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      });
+
+      return excludeFields<User, keyof User>(user!, ['password', 'hash']);
+    } catch {
+      throw new NotFoundError('not found');
+    }
   }
 
   async findByEmail(email: string) {

@@ -48,8 +48,8 @@ export class AuthController {
 
   @Post('admin/email/login')
   @HttpCode(StatusCodes.OK)
-  public adminLogin(@Body() _loginDTO: AuthEmailLoginDto) {
-    // return this.authService.validateLogin(loginDTO, true);
+  public adminLogin(@Body() loginDTO: AuthEmailLoginDto) {
+    return this.authService.validateLogin(loginDTO, true);
   }
 
   @Post('email/register')

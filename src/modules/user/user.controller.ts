@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import {
-  // Authorized,
+  Authorized,
   Body,
   Delete,
   Get,
@@ -11,14 +11,23 @@ import {
   Post,
   QueryParam,
 } from 'routing-controllers';
+import { OpenAPI } from 'routing-controllers-openapi';
 
+import { UserRole } from '../../enums';
+import { DI } from '../../providers';
 import { infinityPagination } from '../../utils';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { UserService } from './user.service';
-// @Authorized()
+import type { UserService } from './user.service';
+
 @JsonController('/users/')
-export class UsersController {
-  constructor(private readonly userService: UserService) {}
+@Authorized([UserRole.SuperAdmin, UserRole.Admin])
+@OpenAPI({ security: [{ basicAuth: [] }] })
+export class UserController {
+  private userService: UserService;
+
+  constructor() {
+    this.userService = DI.instance.userService;
+  }
 
   @Post()
   @HttpCode(StatusCodes.CREATED)
