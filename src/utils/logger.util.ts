@@ -62,8 +62,8 @@ function createLogger(
       const format = () => {
         const message =
           type === 'info'
-            ? colors.blue(colors.bold(`${prefix} [${objString}]`))
-            : colors.red(colors.bold(`${prefix} [${objString}]`));
+            ? colors.blue(colors.bold(`${prefix} ${objString}`))
+            : colors.red(colors.bold(`${prefix} ${objString}`));
 
         return `${colors.dim(new Date().toLocaleTimeString())} ${message}`;
       };

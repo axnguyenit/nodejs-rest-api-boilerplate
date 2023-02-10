@@ -2,7 +2,7 @@ import type { Application } from 'express';
 import express from 'express';
 import { useExpressServer } from 'routing-controllers';
 
-import { authorizationChecker } from './middlewares';
+import { authorizationChecker } from './middleware';
 import type { ConfigService } from './providers';
 import { Swagger } from './swagger';
 import { logger } from './utils';
@@ -31,7 +31,7 @@ export class App {
       cors: true,
       routePrefix: `${this.configService.get('ROUTE_PREFIX')}`,
       classTransformer: true,
-      controllers: [__dirname + '/modules/**/*.controller.ts'],
+      controllers: [__dirname + '/modules/**/*.controller.{ts,js}'],
       authorizationChecker,
     });
   }
