@@ -13,9 +13,10 @@ import {
 } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
-import { UserRole } from '../../enums';
-import { DI } from '../../providers';
-import { infinityPagination } from '../../utils';
+import { UserRole } from '~/enums';
+import { DI } from '~/providers';
+import { infinityPagination } from '~/utils';
+
 import { CreateUserDto, UpdateUserDto } from './dto';
 import type { UserService } from './user.service';
 

@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
-import { AuthService } from '../modules/auth/auth.service';
-import { JwtService } from '../modules/jwt';
-import { UserService } from '../modules/user';
+import { AuthService } from '~/modules/auth/auth.service';
+import { JwtService } from '~/modules/jwt';
+import { UserService } from '~/modules/user';
+
 import type { Logger } from './services';
 import { LoggerImpl } from './services';
 import { ConfigService } from './services/config.service';

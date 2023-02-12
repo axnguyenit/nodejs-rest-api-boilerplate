@@ -2,9 +2,10 @@ import type { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { NotFoundError } from 'routing-controllers';
 
-import { DI } from '../../providers';
-import type { PaginationOptions } from '../../types';
-import { excludedFields } from '../../utils';
+import { DI } from '~/providers';
+import type { PaginationOptions } from '~/types';
+import { excludedFields } from '~/utils';
+
 import type { CreateUserDto, UpdateUserDto } from './dto';
 
 export class UserService {

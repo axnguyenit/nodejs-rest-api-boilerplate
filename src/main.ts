@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import 'module-alias/register';
 
 import { App } from './app';
 import { DI } from './providers';

@@ -1,9 +1,9 @@
 import type { Action } from 'routing-controllers';
 import { UnauthorizedError } from 'routing-controllers';
 
-import { UserRole } from '../enums';
-import type { JwtPayload } from '../modules/jwt';
-import { DI } from '../providers';
+import { UserRole } from '~/enums';
+import type { JwtPayload } from '~/modules/jwt';
+import { DI } from '~/providers';
 
 export function authorizationChecker(action: Action, roles: Array<UserRole>) {
   try {

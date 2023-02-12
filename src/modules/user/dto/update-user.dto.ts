@@ -7,7 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { UserStatus } from '../../../enums';
+import { UserStatus } from '~/enums';
 
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())

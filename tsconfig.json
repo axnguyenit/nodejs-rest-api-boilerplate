@@ -21,9 +21,9 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "outDir": "dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],
