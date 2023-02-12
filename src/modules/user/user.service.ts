@@ -4,7 +4,7 @@ import { NotFoundError } from 'routing-controllers';
 
 import { DI } from '../../providers';
 import type { PaginationOptions } from '../../types';
-import { excludeFields } from '../../utils';
+import { excludedFields } from '../../utils';
 import type { CreateUserDto, UpdateUserDto } from './dto';
 
 export class UserService {
@@ -39,7 +39,7 @@ export class UserService {
         where: { id },
       });
 
-      return excludeFields<User, keyof User>(user!, ['password', 'hash']);
+      return excludedFields<User, keyof User>(user!, ['password', 'hash']);
     } catch {
       throw new NotFoundError('not found');
     }

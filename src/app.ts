@@ -4,13 +4,16 @@ import { useExpressServer } from 'routing-controllers';
 
 import { authorizationChecker } from './middleware';
 import type { ConfigService } from './providers';
+import type { Logger } from './providers/services';
 import { Swagger } from './swagger';
-import { logger } from './utils';
 
 export class App {
   private app: Application;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private loggerService: Logger,
+  ) {
     this.app = express();
 
     this.initialize();
@@ -19,9 +22,13 @@ export class App {
 
   public listen() {
     this.app.listen(this.configService.get('PORT'), () => {
-      logger.info(
+      this.loggerService.info(
         `Listening on http://[::1]:${this.configService.get('PORT')}`,
         { prefix: 'Express' },
+      );
+      this.loggerService.info(
+        `http://[::1]:${this.configService.get('PORT')}/v1/docs`,
+        { prefix: 'API Docs' },
       );
     });
   }

@@ -6,7 +6,8 @@ import { StatusCodes } from 'http-status-codes';
 import { ErrorCode, UserRole } from '../../enums';
 import { AppError } from '../../errors';
 import { DI } from '../../providers';
-import { excludeFields, logger, randomStringGenerator } from '../../utils';
+import type { Logger } from '../../providers/services';
+import { excludedFields, randomStringGenerator } from '../../utils';
 import type { JwtService } from '../jwt';
 import type { UserService } from '../user';
 import { AuthProviders } from './auth-providers.enum';
@@ -18,14 +19,13 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly loggerService: Logger,
   ) {
     this.prisma = DI.instance.prismaService;
   }
 
   async validateLogin(loginDto: AuthEmailLoginDto, onlyAdmin: boolean) {
     const user = await this.userService.findByEmail(loginDto.email);
-
-    logger.info(user);
 
     if (
       !user ||
@@ -73,7 +73,7 @@ export class AuthService {
       role: user.role,
     });
 
-    const userExcludedFields = excludeFields<User, keyof User>(user, [
+    const userExcludedFields = excludedFields<User, keyof User>(user, [
       'password',
       'hash',
     ]);

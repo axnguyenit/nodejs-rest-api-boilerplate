@@ -92,6 +92,6 @@
     ]
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seeds/run-seed.ts"
   }
 }

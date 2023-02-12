@@ -3,7 +3,9 @@ import { PrismaClient } from '@prisma/client';
 import { AuthService } from '../modules/auth/auth.service';
 import { JwtService } from '../modules/jwt';
 import { UserService } from '../modules/user';
-import { ConfigService } from './config.service';
+import type { Logger } from './services';
+import { LoggerImpl } from './services';
+import { ConfigService } from './services/config.service';
 
 export class DI {
   private static singleton: DI;
@@ -25,6 +27,9 @@ export class DI {
   get jwtService(): JwtService {
     return new JwtService({
       secret: this.configService.get<string>('AUTH_JWT_SECRET'),
+      signOptions: {
+        expiresIn: this.configService.get<string>('AUTH_JWT_TOKEN_EXPIRES_IN'),
+      },
     });
   }
 
@@ -33,10 +38,18 @@ export class DI {
   }
 
   get authService(): AuthService {
-    return new AuthService(this.userService, this.jwtService);
+    return new AuthService(
+      this.userService,
+      this.jwtService,
+      this.loggerService,
+    );
   }
 
   get prismaService(): PrismaClient {
     return new PrismaClient();
+  }
+
+  get loggerService(): Logger {
+    return new LoggerImpl();
   }
 }

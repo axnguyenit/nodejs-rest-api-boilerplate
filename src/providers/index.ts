@@ -1,2 +1,2 @@
-export * from './config.service';
 export * from './di';
+export * from './services';

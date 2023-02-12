@@ -10,16 +10,19 @@ export class JwtService {
   constructor(private readonly options: JwtServiceOptions) {}
 
   sign(payload: string | Buffer | object, options?: JwtSignOptions): string {
-    const secret = this.getSecretKey(payload, options);
+    const secret = this.getSecretKey(options);
 
-    return jwt.sign(payload, secret, options);
+    return jwt.sign(payload, secret, {
+      ...options,
+      expiresIn: this.getExpiresIn(options),
+    });
   }
 
   verify<T extends Record<string, unknown>>(
     token: string,
     options?: JwtVerifyOptions,
   ): T {
-    const secret = this.getSecretKey(token, options);
+    const secret = this.getSecretKey(options);
 
     return <T>jwt.verify(token, secret, options);
   }
@@ -32,9 +35,12 @@ export class JwtService {
   }
 
   private getSecretKey(
-    token: string | object | Buffer,
     options: JwtVerifyOptions | JwtSignOptions | undefined,
   ): string | Buffer | jwt.Secret {
     return <jwt.Secret>(options?.secret || this.options.secret);
+  }
+
+  private getExpiresIn(options?: JwtSignOptions): string | number | undefined {
+    return options?.expiresIn || this.options.signOptions?.expiresIn;
   }
 }

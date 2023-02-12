@@ -51,6 +51,7 @@ export class UserController {
         limit,
       }),
       { page, limit },
+      ['password', 'hash'],
     );
   }
 
