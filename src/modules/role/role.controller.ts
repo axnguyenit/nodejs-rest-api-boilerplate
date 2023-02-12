@@ -1,11 +1,16 @@
 import { StatusCodes } from 'http-status-codes';
 import { Controller, Get, HttpCode } from 'routing-controllers';
 
-import { RoleService } from './role.service';
+import { DI } from '../../providers';
+import type { RoleService } from './role.service';
 
 @Controller('/roles')
 export class RolesController {
-  constructor(private readonly roleService: RoleService) {}
+  private roleService: RoleService;
+
+  constructor() {
+    this.roleService = DI.instance.roleService;
+  }
 
   @Get()
   @HttpCode(StatusCodes.OK)

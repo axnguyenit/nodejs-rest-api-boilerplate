@@ -7,7 +7,12 @@ import { StatusSeedService } from './status/status-seed.service';
 import { UserSeedService } from './user/user-seed.service';
 
 const runSeed = async () => {
-  const app = new App(DI.instance.configService, DI.instance.databaseService);
+  const app = new App(
+    DI.instance.configService,
+    DI.instance.databaseService,
+    DI.instance.loggerService,
+  );
+
   const role = new RoleSeedService(DI.instance.roleRepository);
   const status = new StatusSeedService(DI.instance.statusRepository);
   const user = new UserSeedService(DI.instance.userRepository);

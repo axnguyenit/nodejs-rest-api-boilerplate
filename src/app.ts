@@ -4,7 +4,7 @@ import type { Action } from 'routing-controllers';
 import { useExpressServer } from 'routing-controllers';
 
 import type { TypeOrmService } from './database/typeorm.service';
-import type { ConfigService } from './providers';
+import type { ConfigService, Logger } from './providers';
 import { Swagger } from './swagger';
 
 export class App {
@@ -13,6 +13,7 @@ export class App {
   constructor(
     private configService: ConfigService,
     private database: TypeOrmService,
+    private loggerService: Logger,
   ) {
     this.app = express();
 
@@ -23,10 +24,16 @@ export class App {
   public listen() {
     try {
       this.app.listen(this.configService.get('PORT'), () => {
-        console.info(
-          `Server is running on http://[::1]:${this.configService.get('PORT')}`,
+        this.loggerService.info(
+          `Listening on http://[::1]:${this.configService.get('PORT')}`,
+          { prefix: 'Express' },
+        );
+        this.loggerService.info(
+          `http://[::1]:${this.configService.get('PORT')}/v1/docs`,
+          { prefix: 'API Docs' },
         );
       });
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(`Error occurred: ${error.message}`);
