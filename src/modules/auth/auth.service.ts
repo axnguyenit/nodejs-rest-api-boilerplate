@@ -10,6 +10,7 @@ import type { Logger } from '~/providers/services';
 import { excludedFields, randomStringGenerator } from '~/utils';
 
 import type { JwtService } from '../jwt';
+import type { MailService } from '../mail/mail.service';
 import type { UserService } from '../user';
 import { AuthProviders } from './auth-providers.enum';
 import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly loggerService: Logger,
+    private readonly mailService: MailService,
   ) {
     this.prisma = DI.instance.prismaService;
   }
@@ -82,22 +84,50 @@ export class AuthService {
     return { token, user: userExcludedFields };
   }
 
-  async register(dto: AuthRegisterDto): Promise<User> {
+  async register(dto: AuthRegisterDto) {
     const hash = crypto
       .createHash('sha256')
       .update(randomStringGenerator())
       .digest('hex');
 
-    return await this.userService.create({
+    await this.userService.create({
       ...dto,
       hash,
     });
 
-    // await this.mailService.userSignUp({
-    //   to: user.email,
-    //   data: {
-    //     hash,
-    //   },
-    // });
+    await this.mailService.userSignUp({
+      to: dto.email,
+      data: {
+        hash,
+      },
+    });
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    const user = await this.userService.findByEmail(email);
+
+    if (user) {
+      const hash = crypto
+        .createHash('sha256')
+        .update(randomStringGenerator())
+        .digest('hex');
+      // await this.forgotService.create({
+      //   hash,
+      //   user,
+      // });
+
+      await this.mailService.forgotPassword({
+        to: email,
+        data: { hash },
+      });
+    } else {
+      // throw new AppException(HttpStatus.NOT_FOUND, [
+      //   {
+      //     key: 'email',
+      //     message: `Email Not Found`,
+      //     code: ErrorCode.NOT_FOUND,
+      //   },
+      // ]);
+    }
   }
 }

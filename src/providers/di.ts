@@ -4,6 +4,7 @@ import { AuthService } from '~/modules/auth/auth.service';
 import { JwtService } from '~/modules/jwt';
 import { UserService } from '~/modules/user';
 
+import { MailService } from '../modules/mail/mail.service';
 import type { Logger } from './services';
 import { LoggerImpl } from './services';
 import { ConfigService } from './services/config.service';
@@ -43,6 +44,7 @@ export class DI {
       this.userService,
       this.jwtService,
       this.loggerService,
+      this.mailService,
     );
   }
 
@@ -52,5 +54,9 @@ export class DI {
 
   get loggerService(): Logger {
     return new LoggerImpl();
+  }
+
+  get mailService(): MailService {
+    return new MailService(this.configService);
   }
 }
