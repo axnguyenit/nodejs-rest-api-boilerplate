@@ -51,11 +51,11 @@ export class LoggerImpl implements Logger {
     this.thresh = LogLevels[level];
   }
 
-  info(msg, opts) {
+  info(msg: LogMessage, opts: LogOptions) {
     this.output('info', msg, opts);
   }
 
-  error(msg, opts) {
+  error(msg: LogMessage, opts: LogOptions) {
     this.output('error', msg, opts);
   }
 
@@ -68,6 +68,10 @@ export class LoggerImpl implements Logger {
   }
 
   private output(type: LogType, msg: LogMessage, options?: LogOptions) {
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+
     const prefix = options?.prefix ? `[${options?.prefix}]` : '[ax]';
     const objString = JSON.stringify(msg);
 

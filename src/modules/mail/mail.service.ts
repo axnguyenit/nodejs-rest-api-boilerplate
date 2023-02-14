@@ -1,13 +1,11 @@
 import type { Transporter } from 'nodemailer';
 import { createTransport } from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
-import type { NodemailerExpressHandlebarsOptions } from 'nodemailer-express-handlebars';
-import hbs from 'nodemailer-express-handlebars';
-import path from 'path';
 
 import type { ConfigService } from '~/providers';
 
 import type { MailData } from './mail.interface';
+import { getResetPasswordHtmlTemplate } from './mail-templates/reset-password';
 
 export class MailService {
   private transporter: Transporter<SMTPTransport.SentMessageInfo>;
@@ -32,29 +30,6 @@ export class MailService {
         'MAIL_DEFAULT_NAME',
       )} <${this.configService.get<string>('MAIL_DEFAULT_EMAIL')}>`,
     });
-
-    const handlebarsOptions: NodemailerExpressHandlebarsOptions = {
-      viewEngine: {
-        extname: '.hbs',
-        partialsDir: path.join(
-          process.cwd(),
-          'src',
-          'modules',
-          'mail',
-          'mail-templates',
-        ),
-        defaultLayout: false,
-      },
-      viewPath: path.join(
-        process.cwd(),
-        'src',
-        'modules',
-        'mail',
-        'mail-templates',
-      ),
-    };
-
-    this.transporter.use('compile', hbs(handlebarsOptions));
   }
 
   async userSignUp(mailData: MailData<{ hash: string }>) {
@@ -87,21 +62,16 @@ export class MailService {
       text: `${this.configService.get('FRONTEND_DOMAIN')}/password-change/${
         mailData.data.hash
       } Reset password`,
-      html: 'reset-password',
-
-      // template: 'reset-password',
-      // context: {
-      //   title: `Reset password`,
-      //   url: `${this.configService.get('FRONTEND_DOMAIN')}/password-change/${
-      //     mailData.data.hash
-      //   }`,
-      //   actionTitle: `Reset password`,
-      //   app_name: this.configService.get('app.name'),
-      //   text1: `Trouble signing in?`,
-      //   text2: `Resetting your password is easy.?`,
-      //   text3: `Just press the button below and follow the instructions. We’ll have you up and running in no time.`,
-      //   text4: `If you did not make this request then please ignore this email.`,
-      // },
+      watchHtml: 'reset-password',
+      html: getResetPasswordHtmlTemplate({
+        title: `Reset password`,
+        url: `${this.configService.get('FRONTEND_DOMAIN')}/password-change/${
+          mailData.data.hash
+        }`,
+        email: mailData.to,
+        actionTitle: `Reset password`,
+        appName: this.configService.get('APP_NAME'),
+      }),
     });
   }
 }
