@@ -9,7 +9,7 @@ export const infinityPagination = <
   options: PaginationOptions,
   keys: Array<K>,
 ) => {
-  const filledData = data.map((e) => excludedFields<T, keyof T>(e, keys));
+  const filledData = data.map((e) => excludedFields<T, K>(e, keys));
 
   return {
     data: filledData,
