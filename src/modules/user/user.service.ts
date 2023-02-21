@@ -1,14 +1,18 @@
 import type { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
 import { NotFoundError } from 'routing-controllers';
 
 import { DI } from '~/providers';
 import type { PaginationOptions } from '~/types';
 import { excludedFields } from '~/utils';
 
+import { ErrorCode } from '../../enums';
+import { HttpException } from '../../exceptions';
 import type { CreateUserDto, UpdateUserDto } from './dto';
+import type { UserService } from './user.interface';
 
-export class UserService {
+export class UserServiceImpl implements UserService {
   private prisma: PrismaClient;
 
   constructor() {
@@ -46,10 +50,22 @@ export class UserService {
     }
   }
 
-  async findByEmail(email: string) {
-    return await this.prisma.user.findUnique({
-      where: { email },
-    });
+  async findByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email },
+      });
+
+      return user;
+    } catch {
+      throw new HttpException(StatusCodes.NOT_FOUND, [
+        {
+          code: ErrorCode.NotFound,
+          key: 'User',
+          message: `Not found user with ${email}`,
+        },
+      ]);
+    }
   }
 
   update(id: string, updateProfileDto: UpdateUserDto) {

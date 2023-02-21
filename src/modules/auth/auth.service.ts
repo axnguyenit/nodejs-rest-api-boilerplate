@@ -12,10 +12,11 @@ import { HttpException } from '../../exceptions';
 import type { JwtService } from '../jwt';
 import type { MailService } from '../mail/mail.service';
 import type { UserService } from '../user';
+import type { AuthService } from './auth.interface';
 import { AuthProviders } from './auth-providers.enum';
 import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
 
-export class AuthService {
+export class AuthServiceImpl implements AuthService {
   private prisma: PrismaClient;
 
   constructor(
@@ -90,16 +91,14 @@ export class AuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
-    await this.userService.create({
-      ...dto,
-      hash,
-    });
-
     await this.mailService.userSignUp({
       to: dto.email,
-      data: {
-        hash,
-      },
+      data: { hash },
+    });
+
+    return await this.userService.create({
+      ...dto,
+      hash,
     });
   }
 

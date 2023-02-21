@@ -18,7 +18,7 @@ import { DI } from '~/providers';
 import { infinityPagination } from '~/utils';
 
 import { CreateUserDto, UpdateUserDto } from './dto';
-import type { UserService } from './user.service';
+import type { UserService } from './user.interface';
 
 @JsonController('/users/')
 @Authorized([UserRole.SuperAdmin, UserRole.Admin])

@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 
-import { AuthService } from '~/modules/auth/auth.service';
+import type { AuthService } from '~/modules/auth';
+import { AuthServiceImpl } from '~/modules/auth';
 import { JwtService } from '~/modules/jwt';
-import { UserService } from '~/modules/user';
+import { MailService } from '~/modules/mail/mail.service';
+import type { UserService } from '~/modules/user';
+import { UserServiceImpl } from '~/modules/user';
 
-import { MailService } from '../modules/mail/mail.service';
 import type { Logger } from './services';
 import { LoggerImpl } from './services';
 import { ConfigService } from './services/config.service';
@@ -36,11 +38,11 @@ export class DI {
   }
 
   get userService(): UserService {
-    return new UserService();
+    return new UserServiceImpl();
   }
 
   get authService(): AuthService {
-    return new AuthService(
+    return new AuthServiceImpl(
       this.userService,
       this.jwtService,
       this.loggerService,

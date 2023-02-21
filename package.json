@@ -85,7 +85,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "nodemon": "^2.0.20",
-    "picocolors": "^1.0.0",
     "prettier": "^2.8.3",
     "prisma": "^4.10.0",
     "ts-node": "^10.9.1",

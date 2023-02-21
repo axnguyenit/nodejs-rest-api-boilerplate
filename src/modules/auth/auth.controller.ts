@@ -14,7 +14,7 @@ import { OpenAPI } from 'routing-controllers-openapi';
 
 import { DI } from '~/providers/di';
 
-import type { AuthService } from './auth.service';
+import type { AuthService } from './auth.interface';
 import {
   AuthConfirmEmailDto,
   AuthEmailLoginDto,

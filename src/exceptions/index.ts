@@ -1,9 +1,11 @@
 import { HttpError } from 'routing-controllers';
 
+import type { ErrorCode } from '~/enums';
+
 export interface ErrorDetails {
   message: string;
   key: string;
-  code: string;
+  code: ErrorCode;
 }
 
 export class HttpException extends HttpError {
