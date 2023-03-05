@@ -95,9 +95,7 @@ export class LoggerImpl implements Logger {
     options?: LogOptions,
     fg?: number,
   ) {
-    if (process.env.NODE_ENV === 'production') {
-      return;
-    }
+    if (process.env.NODE_ENV === 'production') return;
 
     const method = type === 'info' ? 'log' : type;
     let doubleDividerLine = '';
@@ -111,7 +109,6 @@ export class LoggerImpl implements Logger {
     const topBorder = `${this.topLeftCorner}${doubleDividerLine}${this.topRightCorner}`;
     const middleBorder = `${this.middleLeftCorner}${singleDividerLine}${this.middleRightCorner}`;
     const bottomBorder = `${this.bottomLeftCorner}${doubleDividerLine}${this.bottomRightCorner}`;
-
     const prefix = options?.prefix ? `[${options?.prefix}]` : '[ax]';
     const objString = JSON.stringify(msg);
 

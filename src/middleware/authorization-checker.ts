@@ -5,7 +5,7 @@ import { UserRole } from '~/enums';
 import type { JwtPayload } from '~/modules/jwt';
 import { DI } from '~/providers';
 
-export function authorizationChecker(action: Action, roles: Array<UserRole>) {
+const authorizationChecker = (action: Action, roles: Array<UserRole>) => {
   try {
     const authorization = action.request.headers.authorization;
     const token = authorization.replace(/^Bearer\s+/, '');
@@ -19,4 +19,6 @@ export function authorizationChecker(action: Action, roles: Array<UserRole>) {
   } catch {
     throw new UnauthorizedError();
   }
-}
+};
+
+export { authorizationChecker };

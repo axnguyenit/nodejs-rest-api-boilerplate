@@ -1,14 +1,13 @@
-import type { PrismaClient, User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { StatusCodes } from 'http-status-codes';
 
 import { ErrorCode, UserRole } from '~/enums';
-import { DI } from '~/providers';
+import { HttpException } from '~/exceptions';
 import type { Logger } from '~/providers/services';
 import { excludedFields, randomStringGenerator } from '~/utils';
 
-import { HttpException } from '../../exceptions';
 import type { JwtService } from '../jwt';
 import type { MailService } from '../mail/mail.service';
 import type { UserService } from '../user';
@@ -17,16 +16,12 @@ import { AuthProviders } from './auth-providers.enum';
 import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
 
 export class AuthServiceImpl implements AuthService {
-  private prisma: PrismaClient;
-
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly loggerService: Logger,
     private readonly mailService: MailService,
-  ) {
-    this.prisma = DI.instance.prismaService;
-  }
+  ) {}
 
   async validateLogin(loginDto: AuthEmailLoginDto, onlyAdmin: boolean) {
     const user = await this.userService.findByEmail(loginDto.email);

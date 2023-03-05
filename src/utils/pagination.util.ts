@@ -1,4 +1,5 @@
-import type { PaginationOptions } from '../types';
+import type { PaginationOptions } from '~/types';
+
 import { excludedFields } from './prisma.util';
 
 export const infinityPagination = <

@@ -2,7 +2,11 @@ import type { Application } from 'express';
 import express from 'express';
 import { useExpressServer } from 'routing-controllers';
 
-import { authorizationChecker } from './middleware';
+import {
+  authorizationChecker,
+  currentUserChecker,
+  ErrorHandlerMiddleware,
+} from './middleware';
 import type { ConfigService } from './providers';
 import type { Logger } from './providers/services';
 import { Swagger } from './swagger';
@@ -34,12 +38,16 @@ export class App {
   }
 
   private initialize() {
+    // UseInterceptor(ValidationInterceptor);
     useExpressServer(this.app, {
       cors: true,
-      routePrefix: `${this.configService.get('ROUTE_PREFIX')}`,
+      routePrefix: this.configService.get<string>('ROUTE_PREFIX'),
       classTransformer: true,
+      validation: true,
       controllers: [__dirname + '/modules/**/*.controller.{ts,js}'],
       authorizationChecker,
+      currentUserChecker,
+      middlewares: [ErrorHandlerMiddleware],
     });
   }
 

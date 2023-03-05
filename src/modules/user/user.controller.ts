@@ -20,7 +20,7 @@ import { infinityPagination } from '~/utils';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import type { UserService } from './user.interface';
 
-@JsonController('/users/')
+@JsonController('/users')
 @Authorized([UserRole.SuperAdmin, UserRole.Admin])
 @OpenAPI({ security: [{ basicAuth: [] }] })
 export class UserController {
@@ -33,6 +33,8 @@ export class UserController {
   @Post()
   @HttpCode(StatusCodes.CREATED)
   create(@Body() createProfileDto: CreateUserDto) {
+    DI.instance.loggerService.info(createProfileDto);
+
     return this.userService.create(createProfileDto);
   }
 
@@ -56,19 +58,19 @@ export class UserController {
     );
   }
 
-  @Get(':id')
+  @Get('/:id')
   @HttpCode(StatusCodes.OK)
   findOne(@Param('id') id: string) {
     return this.userService.findById(id);
   }
 
-  @Patch(':id')
+  @Patch('/:id')
   @HttpCode(StatusCodes.OK)
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateUserDto) {
     return this.userService.update(id, updateProfileDto);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.userService.delete(id);
   }

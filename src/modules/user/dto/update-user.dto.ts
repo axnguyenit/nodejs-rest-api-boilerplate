@@ -5,15 +5,19 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  Validate,
 } from 'class-validator';
 
 import { UserStatus } from '~/enums';
+import { IsNotExist } from '~/validators';
 
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
   @IsNotEmpty()
   @IsEmail()
-  @IsOptional()
+  @Validate(IsNotExist, ['User'], {
+    message: 'Email already existed',
+  })
   email?: string;
 
   @IsNotEmpty()
@@ -21,7 +25,7 @@ export class UpdateUserDto {
   fullName?: string;
 
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(8)
   @IsOptional()
   password?: string;
 
