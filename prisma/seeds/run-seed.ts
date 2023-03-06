@@ -13,10 +13,9 @@ async function runSeed() {
 void (async function () {
   try {
     await runSeed();
-    await prisma.$disconnect();
   } catch {
-    await prisma.$disconnect();
-    // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 })();

@@ -7,9 +7,7 @@ import type { UserEntity } from './entities';
 export interface UserService {
   create(createProfileDto: CreateUserDto): Promise<UserEntity>;
 
-  findManyWithPagination(
-    paginationOptions: PaginationOptions,
-  ): Promise<Array<UserEntity>>;
+  findManyWithPagination(paginationOptions: PaginationOptions): Promise<Array<UserEntity>>;
 
   findById(id: string): Promise<Omit<UserEntity, keyof UserEntity>>;
 

@@ -1,10 +1,4 @@
-import type {
-  DeepPartial,
-  EntityUpdateInput,
-  FindManyOptions,
-  FindOneOptions,
-  FindOptionsWhere,
-} from '../types';
+import type { DeepPartial, EntityUpdateInput, FindManyOptions, FindOneOptions, FindOptionsWhere } from '../types';
 
 export abstract class BaseRepository<Entity extends Record<string, unknown>> {
   abstract create(entity: DeepPartial<Entity>): Promise<Entity>;
@@ -23,10 +17,7 @@ export abstract class BaseRepository<Entity extends Record<string, unknown>> {
 
   abstract countBy(where: FindOptionsWhere<Entity>): Promise<number>;
 
-  abstract update(
-    id: string | number,
-    entity: EntityUpdateInput<DeepPartial<Entity>>,
-  ): Promise<Entity>;
+  abstract update(id: string | number, entity: EntityUpdateInput<DeepPartial<Entity>>): Promise<Entity>;
 
   abstract delete(id: string | number): Promise<Entity>;
 }

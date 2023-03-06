@@ -1,11 +1,6 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 
-import type {
-  DeepPartial,
-  FindManyOptions,
-  FindOneOptions,
-  FindOptionsWhere,
-} from '~/core';
+import type { DeepPartial, FindManyOptions, FindOneOptions, FindOptionsWhere } from '~/core';
 import { DI } from '~/providers';
 
 import type { UserEntity } from './entities';
@@ -24,17 +19,13 @@ export class UserRepositoryIml implements UserRepository {
     });
   }
 
-  async findOne(
-    options: FindOneOptions<UserEntity>,
-  ): Promise<UserEntity | null> {
+  async findOne(options: FindOneOptions<UserEntity>): Promise<UserEntity | null> {
     return await this.prisma.user.findFirst({
       where: <Prisma.UserWhereInput>options,
     });
   }
 
-  async find(
-    options?: FindManyOptions<UserEntity>,
-  ): Promise<Array<UserEntity>> {
+  async find(options?: FindManyOptions<UserEntity>): Promise<Array<UserEntity>> {
     return await this.prisma.user.findMany({
       skip: options?.skip,
       take: options?.take,
@@ -42,17 +33,13 @@ export class UserRepositoryIml implements UserRepository {
     });
   }
 
-  async findBy(
-    options: FindOptionsWhere<UserEntity>,
-  ): Promise<Array<UserEntity>> {
+  async findBy(options: FindOptionsWhere<UserEntity>): Promise<Array<UserEntity>> {
     return await this.prisma.user.findMany({
       where: <Prisma.UserWhereInput>{ ...options },
     });
   }
 
-  async findOneBy(
-    where: Prisma.UserWhereUniqueInput,
-  ): Promise<UserEntity | null> {
+  async findOneBy(where: Prisma.UserWhereUniqueInput): Promise<UserEntity | null> {
     return await this.prisma.user.findUnique({ where });
   }
 
@@ -72,10 +59,7 @@ export class UserRepositoryIml implements UserRepository {
     });
   }
 
-  async update(
-    id: string,
-    entity: DeepPartial<UserEntity>,
-  ): Promise<UserEntity> {
+  async update(id: string, entity: DeepPartial<UserEntity>): Promise<UserEntity> {
     return await this.prisma.user.update({
       where: { id },
       data: entity,

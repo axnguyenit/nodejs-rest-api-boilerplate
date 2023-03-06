@@ -4,8 +4,8 @@ import type { AuthService } from '~/modules/auth';
 import { AuthServiceImpl } from '~/modules/auth';
 import { JwtService } from '~/modules/jwt';
 import { MailService } from '~/modules/mail/mail.service';
-import type { UserService } from '~/modules/user';
-import { UserServiceImpl } from '~/modules/user';
+import type { UserRepository, UserService } from '~/modules/user';
+import { UserRepositoryIml, UserServiceImpl } from '~/modules/user';
 
 import type { Logger } from './services';
 import { LoggerImpl } from './services';
@@ -42,12 +42,7 @@ export class DI {
   }
 
   get authService(): AuthService {
-    return new AuthServiceImpl(
-      this.userService,
-      this.jwtService,
-      this.loggerService,
-      this.mailService,
-    );
+    return new AuthServiceImpl(this.userService, this.jwtService, this.loggerService, this.mailService);
   }
 
   get prismaService(): PrismaClient {
@@ -60,5 +55,10 @@ export class DI {
 
   get mailService(): MailService {
     return new MailService(this.configService);
+  }
+
+  //
+  get userRepository(): UserRepository {
+    return new UserRepositoryIml();
   }
 }

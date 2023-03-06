@@ -28,10 +28,7 @@ export class AuthServiceImpl implements AuthService {
 
     if (
       !user ||
-      (user &&
-        !(
-          onlyAdmin ? [UserRole.SuperAdmin, UserRole.Admin] : [UserRole.User]
-        ).includes(UserRole[user.role]))
+      (user && !(onlyAdmin ? [UserRole.SuperAdmin, UserRole.Admin] : [UserRole.User]).includes(UserRole[user.role]))
     ) {
       throw new HttpException(StatusCodes.NOT_FOUND, [
         {
@@ -52,10 +49,7 @@ export class AuthServiceImpl implements AuthService {
       ]);
     }
 
-    const isValidPassword = await bcrypt.compare(
-      loginDto.password,
-      user.password,
-    );
+    const isValidPassword = await bcrypt.compare(loginDto.password, user.password);
 
     if (!isValidPassword) {
       throw new HttpException(StatusCodes.BAD_REQUEST, [
@@ -72,19 +66,13 @@ export class AuthServiceImpl implements AuthService {
       role: user.role,
     });
 
-    const userExcludedFields = excludedFields<User, keyof User>(user, [
-      'password',
-      'hash',
-    ]);
+    const userExcludedFields = excludedFields<User, keyof User>(user, ['password', 'hash']);
 
     return { token, user: userExcludedFields };
   }
 
   async register(dto: AuthRegisterDto) {
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
+    const hash = crypto.createHash('sha256').update(randomStringGenerator()).digest('hex');
 
     await this.mailService.userSignUp({
       to: dto.email,
@@ -101,10 +89,7 @@ export class AuthServiceImpl implements AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (user) {
-      const hash = crypto
-        .createHash('sha256')
-        .update(randomStringGenerator())
-        .digest('hex');
+      const hash = crypto.createHash('sha256').update(randomStringGenerator()).digest('hex');
       // await this.forgotService.create({
       //   hash,
       //   user,
