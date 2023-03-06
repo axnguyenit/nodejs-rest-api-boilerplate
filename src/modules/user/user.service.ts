@@ -5,15 +5,19 @@ import { NotFoundError } from 'routing-controllers';
 
 import { ErrorCode } from '~/enums';
 import { HttpException } from '~/exceptions';
+import { DI } from '~/providers';
 import type { PaginationOptions } from '~/types';
 import { excludedFields } from '~/utils';
 
 import type { CreateUserDto, UpdateUserDto } from './dto';
-import type { UserService } from './user.interface';
-import { UserRepositoryIml } from './user.repository';
+import type { UserRepository, UserService } from './user.interface';
 
 export class UserServiceImpl implements UserService {
-  private userRepository = new UserRepositoryIml();
+  private userRepository: UserRepository;
+
+  constructor() {
+    this.userRepository = DI.instance.userRepository;
+  }
 
   async create(createProfileDto: CreateUserDto) {
     const salt = await bcrypt.genSalt();

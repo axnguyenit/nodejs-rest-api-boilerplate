@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
 } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { DI } from '~/providers/di';
 
@@ -43,6 +43,7 @@ export class AuthController {
 
   @Post('/email/login')
   @HttpCode(StatusCodes.OK)
+  @ResponseSchema(UserResponse)
   async login(
     @Body({
       validate: {
