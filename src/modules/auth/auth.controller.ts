@@ -12,7 +12,7 @@ import {
 } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
-import { DI } from '../../providers/di';
+import { DI } from '../../core/providers/di';
 import type { AuthService } from './auth.service';
 import {
   AuthConfirmEmailDto,

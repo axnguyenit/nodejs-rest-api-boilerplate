@@ -1,6 +1,7 @@
 import type { DataSource } from 'typeorm';
 
-import type { ConfigService } from '../providers';
+import type { ConfigService } from '~/core';
+
 import AppDataSource from './data-source';
 
 export class TypeOrmService {

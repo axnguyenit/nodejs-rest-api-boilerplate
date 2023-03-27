@@ -1,6 +1,7 @@
 import type { Repository } from 'typeorm';
 
-import type { EntityCondition, PaginationOptions } from '../../types';
+import type { EntityCondition, PaginationOptions } from '~/core';
+
 import type { CreateUserDto, UpdateUserDto } from './dto';
 import type { User } from './entities';
 

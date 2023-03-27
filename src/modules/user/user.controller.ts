@@ -12,7 +12,6 @@ import {
   QueryParam,
 } from 'routing-controllers';
 
-import { infinityPagination } from '../../utils';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 
@@ -37,13 +36,10 @@ export class UsersController {
       limit = 50;
     }
 
-    return infinityPagination(
-      await this.userService.findManyWithPagination({
-        page,
-        limit,
-      }),
-      { page, limit },
-    );
+    return await this.userService.findManyWithPagination({
+      page,
+      limit,
+    });
   }
 
   @Get(':id')

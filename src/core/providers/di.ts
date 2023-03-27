@@ -1,16 +1,17 @@
 import type { Repository } from 'typeorm';
 
-import { TypeOrmService } from '../database/typeorm.service';
-import { AuthService } from '../modules/auth/auth.service';
-import { JwtService } from '../modules/jwt';
-import { RoleRepository, RoleService } from '../modules/role';
-import type { Role } from '../modules/role/entities/role.entity';
-import type { Status } from '../modules/status/entities/status.entity';
-import { StatusRepository } from '../modules/status/status.repository';
-import type { User } from '../modules/user';
-import { UserRepository, UserService } from '../modules/user';
-import type { Logger } from './services';
-import { LoggerImpl } from './services';
+import type { Logger } from '~/core';
+import { LoggerImpl } from '~/core';
+import { TypeOrmService } from '~/database/typeorm.service';
+import { AuthService } from '~/modules/auth/auth.service';
+import { RoleRepository, RoleService } from '~/modules/role';
+import type { Role } from '~/modules/role/entities/role.entity';
+import type { Status } from '~/modules/status/entities/status.entity';
+import { StatusRepository } from '~/modules/status/status.repository';
+import type { User } from '~/modules/user';
+import { UserRepository, UserService } from '~/modules/user';
+
+import { JwtService } from './jwt';
 import { ConfigService } from './services/config.service';
 
 export class DI {
@@ -36,9 +37,9 @@ export class DI {
 
   get jwtService(): JwtService {
     return new JwtService({
-      secret: this.configService.get<string>('AUTH_JWT_SECRET'),
+      secret: this.configService.get<string>('auth.secret'),
       signOptions: {
-        expiresIn: this.configService.get<string>('AUTH_JWT_TOKEN_EXPIRES_IN'),
+        expiresIn: this.configService.get<string>('auth.expires'),
       },
     });
   }

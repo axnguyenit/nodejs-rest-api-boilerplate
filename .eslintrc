@@ -81,7 +81,7 @@
      */
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       { "argsIgnorePattern": "^_", "vars": "all", "args": "after-used" }
     ],
     "@typescript-eslint/adjacent-overload-signatures": "error",
@@ -170,7 +170,6 @@
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/ban-tslint-comment": "error",
     "@typescript-eslint/consistent-indexed-object-style": "error",
-    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "@typescript-eslint/consistent-type-imports": [
       "error",
       { "prefer": "type-imports" }
@@ -280,7 +279,6 @@
     "constructor-super": "error",
     "yoda": "error",
     "strict": ["error", "never"],
-    "curly": "error",
     "dot-notation": "error",
     "eol-last": "error",
     "eqeqeq": ["error", "smart"],

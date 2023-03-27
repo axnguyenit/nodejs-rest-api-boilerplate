@@ -1,12 +1,11 @@
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 
-import { randomStringGenerator } from '../../utils';
-import type { JwtService } from '../jwt';
+import type { JwtService } from '~/core';
+
 import { AppRole } from '../role';
 import type { Role } from '../role/entities/role.entity';
 import type { Status } from '../status/entities/status.entity';
-import { AppStatus } from '../status/status.enum';
 import type { User, UserService } from '../user';
 import { AuthProviders } from './auth-providers.enum';
 import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
@@ -30,7 +29,7 @@ export class AuthService {
       (user &&
         !(
           onlyAdmin ? [AppRole.SuperAdmin, AppRole.Admin] : [AppRole.User]
-        ).includes(user.role.id))
+        ).includes(AppRole[user.role.name]))
     ) {
       // throw new AppException(HttpStatus.NOT_FOUND, [
       //   {
@@ -81,23 +80,20 @@ export class AuthService {
   async register(dto: AuthRegisterDto): Promise<void> {
     const hash = crypto
       .createHash('sha256')
-      .update(randomStringGenerator())
+      // .update(randomStringGenerator())
       .digest('hex');
 
-    const user = await this.userService.create({
+    await this.userService.create({
       ...dto,
       email: dto.email,
       role: {
-        id: AppRole.User,
+        id: ' AppRole.User',
       } as Role,
       status: <Status>{
-        id: AppStatus.Inactive,
+        id: 'AppStatus.Inactive',
       },
       hash,
     });
-
-    console.info('>>>>>>>>>>>', user);
-
     // await this.mailService.userSignUp({
     //   to: user.email,
     //   data: {

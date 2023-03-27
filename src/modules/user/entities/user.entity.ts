@@ -6,22 +6,18 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
-import { EntityHelper } from '../../../utils';
-import { AuthProviders } from '../../auth';
-import { Role } from '../../role/entities/role.entity';
-import { Status } from '../../status/entities/status.entity';
+import { BaseEntity } from '~/core';
+import { AuthProviders } from '~/modules/auth';
+import { Role } from '~/modules/role/entities/role.entity';
+import { Status } from '~/modules/status/entities/status.entity';
 
 @Entity({ name: 'users' })
-export class User extends EntityHelper {
-  // public static hashPassword(password: string): Promise<string> {
+export class User extends BaseEntity {
+  //  static hashPassword(password: string): Promise<string> {
   //   return new Promise((resolve, reject) => {
   //     bcrypt.hash(password, 10, (err, hash) => {
   //       if (err) {
@@ -33,7 +29,7 @@ export class User extends EntityHelper {
   //   });
   // }
 
-  // public static comparePassword(
+  //  static comparePassword(
   //   user: User,
   //   password: string,
   // ): Promise<boolean> {
@@ -44,16 +40,13 @@ export class User extends EntityHelper {
   //   });
   // }
 
-  @PrimaryGeneratedColumn('uuid')
-  public id!: string;
-
   @IsNotEmpty()
   @Column()
-  public fullName: string;
+  fullName: string;
 
   @IsNotEmpty()
   @Column({ unique: true })
-  public email: string;
+  email: string;
 
   @Column({ default: AuthProviders.Email })
   @Expose({ groups: ['me', 'admin'] })
@@ -72,13 +65,13 @@ export class User extends EntityHelper {
   @IsNotEmpty()
   @Column()
   @Exclude()
-  public password: string;
+  password: string;
 
   @Exclude({ toPlainOnly: true })
-  public previousPassword: string;
+  previousPassword: string;
 
   @AfterLoad()
-  public loadPreviousPassword(): void {
+  loadPreviousPassword(): void {
     this.previousPassword = this.password;
   }
 
@@ -90,13 +83,4 @@ export class User extends EntityHelper {
       this.password = await bcrypt.hash(this.password, salt);
     }
   }
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

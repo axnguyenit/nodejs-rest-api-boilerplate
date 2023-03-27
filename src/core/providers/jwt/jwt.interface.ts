@@ -1,7 +1,5 @@
 import type { Secret, SignOptions, VerifyOptions } from 'jsonwebtoken';
 
-import type { User } from '../user';
-
 export enum JwtSecretRequestType {
   SIGN,
   VERIFY,
@@ -24,8 +22,3 @@ export interface JwtVerifyOptions extends VerifyOptions {
   secret?: string | Buffer;
   publicKey?: string | Buffer;
 }
-
-export type JwtPayload = Pick<User, 'id' | 'role'> & {
-  iat: number;
-  exp: number;
-};
