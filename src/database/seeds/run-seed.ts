@@ -1,7 +1,8 @@
 import 'dotenv/config';
 
-import { App } from '../../app';
-import { DI } from '../../providers';
+import { App } from '~/app';
+import { DI } from '~/core';
+
 import { RoleSeedService } from './role/role-seed.service';
 import { StatusSeedService } from './status/status-seed.service';
 import { UserSeedService } from './user/user-seed.service';

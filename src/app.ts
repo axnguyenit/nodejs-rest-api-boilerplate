@@ -21,7 +21,6 @@ export class App {
     private loggerService: Logger,
   ) {
     this.app = express();
-
     this.initialize();
     this.initializeSwagger();
   }

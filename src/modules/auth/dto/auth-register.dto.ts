@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 // import { IsNotExist } from '~/validators/is-not-exists.validator';
 
-export class AuthRegisterDto {
+export class SignUpDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   // @Validate(IsNotExist, ['User'], {
   //   message: 'emailAlreadyExists',

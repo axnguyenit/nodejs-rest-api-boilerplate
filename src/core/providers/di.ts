@@ -3,13 +3,14 @@ import type { Repository } from 'typeorm';
 import type { Logger } from '~/core';
 import { LoggerImpl } from '~/core';
 import { TypeOrmService } from '~/database/typeorm.service';
-import { AuthService } from '~/modules/auth/auth.service';
+import type { AuthService } from '~/modules/auth';
+import { AuthServiceImpl } from '~/modules/auth';
 import { RoleRepository, RoleService } from '~/modules/role';
 import type { Role } from '~/modules/role/entities/role.entity';
 import type { Status } from '~/modules/status/entities/status.entity';
 import { StatusRepository } from '~/modules/status/status.repository';
-import type { User } from '~/modules/user';
-import { UserRepository, UserService } from '~/modules/user';
+import type { User, UserService } from '~/modules/user';
+import { UserRepository, UserServiceImpl } from '~/modules/user';
 
 import { JwtService } from './jwt';
 import { ConfigService } from './services/config.service';
@@ -45,11 +46,11 @@ export class DI {
   }
 
   get userService(): UserService {
-    return new UserService(this.userRepository);
+    return new UserServiceImpl(this.userRepository);
   }
 
   get authService(): AuthService {
-    return new AuthService(this.userService, this.jwtService);
+    return new AuthServiceImpl(this.userService, this.jwtService);
   }
 
   get roleService(): RoleService {

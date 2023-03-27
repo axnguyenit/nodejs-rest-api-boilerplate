@@ -19,7 +19,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "strict": true,
-    "strictPropertyInitialization": false,
+    // "types": ["reflect-metadata"],
+    "strictPropertyInitialization": false, // this one to prevent the typescript errors while using @Inject()
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {

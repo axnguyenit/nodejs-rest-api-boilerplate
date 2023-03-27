@@ -6,23 +6,22 @@ import type { JwtService } from '~/core';
 import { AppRole } from '../role';
 import type { Role } from '../role/entities/role.entity';
 import type { Status } from '../status/entities/status.entity';
-import type { User, UserService } from '../user';
+import type { UserService } from '../user';
+import type { AuthService } from './auth.interface';
 import { AuthProviders } from './auth-providers.enum';
-import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
+import type { EmailSignInDto, SignInResponse, SignUpDto } from './dto';
 
-export class AuthService {
+export class AuthServiceImpl implements AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateLogin(
-    loginDto: AuthEmailLoginDto,
+  async signIn(
+    loginDto: EmailSignInDto,
     onlyAdmin: boolean,
-  ): Promise<{ token: string; user: User }> {
-    const user = await this.userService.findOne({
-      email: loginDto.email,
-    });
+  ): Promise<SignInResponse> {
+    const user = await this.userService.getUserByEmail(loginDto.email);
 
     if (
       !user ||
@@ -58,12 +57,12 @@ export class AuthService {
     );
 
     if (isValidPassword) {
-      const token = this.jwtService.sign({
+      const accessToken = this.jwtService.sign({
         id: user.id,
         role: user.role,
       });
 
-      return { token, user };
+      return { accessToken };
     }
 
     // throw new AppException(HttpStatus.BAD_REQUEST, [
@@ -77,7 +76,7 @@ export class AuthService {
     throw new Error('error');
   }
 
-  async register(dto: AuthRegisterDto): Promise<void> {
+  async signUp(dto: SignUpDto): Promise<void> {
     const hash = crypto
       .createHash('sha256')
       // .update(randomStringGenerator())

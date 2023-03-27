@@ -1,9 +1,9 @@
 import type { Action } from 'routing-controllers';
 import { UnauthorizedError } from 'routing-controllers';
 
+import { DI } from '~/core';
 import type { JwtPayload } from '~/core/types';
 import { UserRole } from '~/core/types';
-import { DI } from '~/providers';
 
 const authorizationChecker = (action: Action, roles: Array<UserRole>) => {
   try {

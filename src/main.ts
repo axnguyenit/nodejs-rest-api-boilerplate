@@ -1,5 +1,5 @@
-import 'dotenv/config';
 import 'reflect-metadata';
+import 'dotenv/config';
 import 'module-alias/register';
 
 import { DI } from '~/core';

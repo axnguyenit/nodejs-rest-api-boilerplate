@@ -12,8 +12,8 @@ import {
   QueryParam,
 } from 'routing-controllers';
 
+import { UserService } from './';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { UserService } from './user.service';
 
 @Authorized()
 @JsonController('/users/')
@@ -28,30 +28,34 @@ export class UsersController {
 
   @Get()
   @HttpCode(StatusCodes.OK)
-  async findAll(
+  async filteredUser(
     @QueryParam('limit', { required: true }) limit: number,
     @QueryParam('page', { required: true }) page: number,
+    @QueryParam('query') query: string,
   ) {
     if (limit > 50) {
       limit = 50;
     }
 
-    return await this.userService.findManyWithPagination({
-      page,
-      limit,
-    });
+    return await this.userService.getFilteredUsers(
+      {
+        page,
+        limit,
+      },
+      query,
+    );
   }
 
   @Get(':id')
   @HttpCode(StatusCodes.OK)
   findOne(@Param('id') id: string) {
-    return this.userService.findOne({ id });
+    return this.userService.getUserById(id);
   }
 
   @Patch(':id')
   @HttpCode(StatusCodes.OK)
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateUserDto) {
-    return this.userService.update(id, updateProfileDto);
+    return this.userService.updateUser(id, updateProfileDto);
   }
 
   @Delete(':id')

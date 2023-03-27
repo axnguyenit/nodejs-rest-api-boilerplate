@@ -1,7 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import { Controller, Get, HttpCode } from 'routing-controllers';
 
-import { DI } from '../../providers';
+import { DI } from '~/core';
+
 import type { RoleService } from './role.service';
 
 @Controller('/roles')
