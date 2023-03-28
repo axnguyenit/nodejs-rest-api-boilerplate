@@ -3,9 +3,6 @@ import * as crypto from 'crypto';
 
 import type { JwtService } from '~/core';
 
-import { AppRole } from '../role';
-import type { Role } from '../role/entities/role.entity';
-import type { Status } from '../status/entities/status.entity';
 import type { UserService } from '../user';
 import type { AuthService } from './auth.interface';
 import { AuthProviders } from './auth-providers.enum';
@@ -19,26 +16,26 @@ export class AuthServiceImpl implements AuthService {
 
   async signIn(
     loginDto: EmailSignInDto,
-    onlyAdmin: boolean,
+    _onlyAdmin: boolean,
   ): Promise<SignInResponse> {
     const user = await this.userService.getUserByEmail(loginDto.email);
 
-    if (
-      !user ||
-      (user &&
-        !(
-          onlyAdmin ? [AppRole.SuperAdmin, AppRole.Admin] : [AppRole.User]
-        ).includes(AppRole[user.role.name]))
-    ) {
-      // throw new AppException(HttpStatus.NOT_FOUND, [
-      //   {
-      //     key: 'user',
-      //     message: `User Not Found`,
-      //     code: ErrorCode.NOT_FOUND,
-      //   },
-      // ]);
-      throw new Error('error');
-    }
+    // if (
+    //   !user ||
+    //   (user &&
+    //     !(
+    //       onlyAdmin ? [AppRole.SuperAdmin, AppRole.Admin] : [AppRole.User]
+    //     ).includes(AppRole[user.role.name]))
+    // ) {
+    //   // throw new AppException(HttpStatus.NOT_FOUND, [
+    //   //   {
+    //   //     key: 'user',
+    //   //     message: `User Not Found`,
+    //   //     code: ErrorCode.NOT_FOUND,
+    //   //   },
+    //   // ]);
+    //   throw new Error('error');
+    // }
 
     if (user.provider !== AuthProviders.Email) {
       // throw new AppException(HttpStatus.BAD_REQUEST, [
@@ -85,12 +82,6 @@ export class AuthServiceImpl implements AuthService {
     await this.userService.create({
       ...dto,
       email: dto.email,
-      role: {
-        id: ' AppRole.User',
-      } as Role,
-      status: <Status>{
-        id: 'AppStatus.Inactive',
-      },
       hash,
     });
     // await this.mailService.userSignUp({

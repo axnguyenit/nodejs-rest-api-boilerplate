@@ -1,8 +1,9 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
 
+import { UserStatus } from '~/core';
+
 import { Role } from '../../role';
-import { Status } from '../../status/entities/status.entity';
 
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
@@ -31,7 +32,7 @@ export class UpdateUserDto {
   // @Validate(IsExist, ['Status', 'id'], {
   //   message: 'statusNotExists',
   // })
-  status?: Status;
+  status?: UserStatus;
 
   hash?: string;
 }

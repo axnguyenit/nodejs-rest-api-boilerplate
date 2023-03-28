@@ -10,12 +10,11 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-import { BaseEntity } from '~/core';
+import { BaseEntity, UserStatus } from '~/core';
 import { AuthProviders } from '~/modules/auth';
 import { Role } from '~/modules/role/entities/role.entity';
-import { Status } from '~/modules/status/entities/status.entity';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class User extends BaseEntity {
   //  static hashPassword(password: string): Promise<string> {
   //   return new Promise((resolve, reject) => {
@@ -52,15 +51,11 @@ export class User extends BaseEntity {
   @Expose({ groups: ['me', 'admin'] })
   provider: string;
 
-  @ManyToOne(() => Role, {
-    eager: true,
-  })
+  @ManyToOne(() => Role, { eager: true })
   role: Role;
 
-  @ManyToOne(() => Status, {
-    eager: true,
-  })
-  status?: Status;
+  @Column({ type: 'enum', enum: UserStatus, enumName: 'user_status' })
+  status?: UserStatus;
 
   @IsNotEmpty()
   @Column()

@@ -1,4 +1,5 @@
-import type { PaginationOptions } from '../../core';
+import type { PaginationOptions } from '~/core';
+
 import type { CreateUserDto, UpdateUserDto } from './dto';
 import type { User } from './entities';
 

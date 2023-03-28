@@ -3,9 +3,9 @@ import { Column, Entity } from 'typeorm';
 
 import { BaseEntity } from '~/core';
 
-@Entity({ name: 'roles' })
+@Entity({ name: 'role' })
 export class Role extends BaseEntity {
   @Allow()
-  @Column()
+  @Column({ unique: true })
   name: string;
 }

@@ -7,8 +7,6 @@ import type { AuthService } from '~/modules/auth';
 import { AuthServiceImpl } from '~/modules/auth';
 import { RoleRepository, RoleService } from '~/modules/role';
 import type { Role } from '~/modules/role/entities/role.entity';
-import type { Status } from '~/modules/status/entities/status.entity';
-import { StatusRepository } from '~/modules/status/status.repository';
 import type { User, UserService } from '~/modules/user';
 import { UserRepository, UserServiceImpl } from '~/modules/user';
 
@@ -65,10 +63,6 @@ export class DI {
 
   get roleRepository(): Repository<Role> {
     return RoleRepository;
-  }
-
-  get statusRepository(): Repository<Status> {
-    return StatusRepository;
   }
 
   get userRepository(): Repository<User> {
