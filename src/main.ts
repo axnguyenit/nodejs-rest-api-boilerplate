@@ -1,18 +1,22 @@
+import 'reflect-metadata';
 import 'dotenv/config';
+import 'module-alias/register';
+
+import { DI } from '~/core';
 
 import { App } from './app';
-import { DI } from './providers';
 
-const app = new App(DI.instance.configService, DI.instance.databaseService);
+const app = new App(
+  DI.instance.configService,
+  DI.instance.databaseService,
+  DI.instance.loggerService,
+);
 
 void (async function () {
   try {
     await app.connectDatabase();
-
-    console.info('Connect to database successfully!');
+    app.listen();
   } catch (error) {
     console.error(error);
   }
-
-  app.listen();
 })();

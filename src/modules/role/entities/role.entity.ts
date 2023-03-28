@@ -1,14 +1,11 @@
 import { Allow } from 'class-validator';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
-import { EntityHelper } from '../../../utils';
+import { BaseEntity } from '~/core';
 
-@Entity({ name: 'roles' })
-export class Role extends EntityHelper {
-  @PrimaryColumn()
-  id: number;
-
+@Entity({ name: 'role' })
+export class Role extends BaseEntity {
   @Allow()
-  @Column()
+  @Column({ unique: true })
   name: string;
 }

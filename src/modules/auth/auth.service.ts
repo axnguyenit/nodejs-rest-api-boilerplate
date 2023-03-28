@@ -1,46 +1,41 @@
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 
-import { randomStringGenerator } from '../../utils';
-import type { JwtService } from '../jwt';
-import { AppRole } from '../role';
-import type { Role } from '../role/entities/role.entity';
-import type { Status } from '../status/entities/status.entity';
-import { AppStatus } from '../status/status.enum';
-import type { User, UserService } from '../user';
-import { AuthProviders } from './auth-providers.enum';
-import type { AuthEmailLoginDto, AuthRegisterDto } from './dto';
+import type { JwtService } from '~/core';
 
-export class AuthService {
+import type { UserService } from '../user';
+import type { AuthService } from './auth.interface';
+import { AuthProviders } from './auth-providers.enum';
+import type { EmailSignInDto, SignInResponse, SignUpDto } from './dto';
+
+export class AuthServiceImpl implements AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateLogin(
-    loginDto: AuthEmailLoginDto,
-    onlyAdmin: boolean,
-  ): Promise<{ token: string; user: User }> {
-    const user = await this.userService.findOne({
-      email: loginDto.email,
-    });
+  async signIn(
+    loginDto: EmailSignInDto,
+    _onlyAdmin: boolean,
+  ): Promise<SignInResponse> {
+    const user = await this.userService.getUserByEmail(loginDto.email);
 
-    if (
-      !user ||
-      (user &&
-        !(
-          onlyAdmin ? [AppRole.SuperAdmin, AppRole.Admin] : [AppRole.User]
-        ).includes(user.role.id))
-    ) {
-      // throw new AppException(HttpStatus.NOT_FOUND, [
-      //   {
-      //     key: 'user',
-      //     message: `User Not Found`,
-      //     code: ErrorCode.NOT_FOUND,
-      //   },
-      // ]);
-      throw new Error('error');
-    }
+    // if (
+    //   !user ||
+    //   (user &&
+    //     !(
+    //       onlyAdmin ? [AppRole.SuperAdmin, AppRole.Admin] : [AppRole.User]
+    //     ).includes(AppRole[user.role.name]))
+    // ) {
+    //   // throw new AppException(HttpStatus.NOT_FOUND, [
+    //   //   {
+    //   //     key: 'user',
+    //   //     message: `User Not Found`,
+    //   //     code: ErrorCode.NOT_FOUND,
+    //   //   },
+    //   // ]);
+    //   throw new Error('error');
+    // }
 
     if (user.provider !== AuthProviders.Email) {
       // throw new AppException(HttpStatus.BAD_REQUEST, [
@@ -59,12 +54,12 @@ export class AuthService {
     );
 
     if (isValidPassword) {
-      const token = this.jwtService.sign({
+      const accessToken = this.jwtService.sign({
         id: user.id,
         role: user.role,
       });
 
-      return { token, user };
+      return { accessToken };
     }
 
     // throw new AppException(HttpStatus.BAD_REQUEST, [
@@ -78,26 +73,17 @@ export class AuthService {
     throw new Error('error');
   }
 
-  async register(dto: AuthRegisterDto): Promise<void> {
+  async signUp(dto: SignUpDto): Promise<void> {
     const hash = crypto
       .createHash('sha256')
-      .update(randomStringGenerator())
+      // .update(randomStringGenerator())
       .digest('hex');
 
-    const user = await this.userService.create({
+    await this.userService.create({
       ...dto,
       email: dto.email,
-      role: {
-        id: AppRole.User,
-      } as Role,
-      status: <Status>{
-        id: AppStatus.Inactive,
-      },
       hash,
     });
-
-    console.info('>>>>>>>>>>>', user);
-
     // await this.mailService.userSignUp({
     //   to: user.email,
     //   data: {

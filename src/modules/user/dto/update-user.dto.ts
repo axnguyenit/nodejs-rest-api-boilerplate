@@ -1,14 +1,15 @@
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
 
-import type { Role } from '../../role';
-import { Status } from '../../status/entities/status.entity';
+import { UserStatus } from '~/core';
+
+import { Role } from '../../role';
 
 export class UpdateUserDto {
   @Transform(({ value }) => value?.toLowerCase().trim())
   @IsOptional()
   @IsEmail()
-  email?: string | null;
+  email?: string;
 
   @IsOptional()
   @MinLength(6)
@@ -16,22 +17,22 @@ export class UpdateUserDto {
 
   provider?: string;
 
-  socialId?: string | null;
+  socialId?: string;
 
   @IsOptional()
-  fullName?: string | null;
+  fullName?: string;
 
   @IsOptional()
   // @Validate(IsExist, ['Role', 'id'], {
   //   message: 'roleNotExists',
   // })
-  role?: Role | null;
+  role?: Role;
 
   @IsOptional()
   // @Validate(IsExist, ['Status', 'id'], {
   //   message: 'statusNotExists',
   // })
-  status?: Status;
+  status?: UserStatus;
 
-  hash?: string | null;
+  hash?: string;
 }

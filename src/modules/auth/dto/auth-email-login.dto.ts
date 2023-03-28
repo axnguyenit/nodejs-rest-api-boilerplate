@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 
 // import { IsExist } from '~/validators/is-exists.validator';
 
-export class AuthEmailLoginDto {
+export class EmailSignInDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   @IsEmail()
   // @Validate(IsExist, ['User'], {

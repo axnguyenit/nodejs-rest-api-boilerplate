@@ -6,7 +6,7 @@ import { getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUi from 'swagger-ui-express';
 
-import type { ConfigService } from './providers';
+import type { ConfigService } from '~/core';
 
 export class Swagger {
   constructor(private app: Application, private configService: ConfigService) {}
@@ -35,15 +35,15 @@ export class Swagger {
         security: [{ accessToken: [], userProfileToken: [] }],
         info: {
           // eslint-disable-next-line @typescript-eslint/keyword-spacing
-          title: <string>this.configService.get('APP_NAME'),
+          title: this.configService.get('app.name'),
           version: '1.0',
         },
         paths: {
-          default: `${this.configService.get('BACKEND_DOMAIN')}/api/v1`,
+          default: `${this.configService.get('app.backendDomain')}/api/v1`,
         },
         servers: [
           {
-            url: `${this.configService.get('BACKEND_DOMAIN')}/api/v1`,
+            url: `${this.configService.get('app.backendDomain')}/api/v1`,
           },
         ],
       },

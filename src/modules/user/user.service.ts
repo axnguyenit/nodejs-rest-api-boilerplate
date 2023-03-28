@@ -1,10 +1,12 @@
 import type { Repository } from 'typeorm';
 
-import type { EntityCondition, PaginationOptions } from '../../types';
+import type { PaginationOptions } from '~/core';
+
 import type { CreateUserDto, UpdateUserDto } from './dto';
 import type { User } from './entities';
+import type { UserService } from './user.interface';
 
-export class UserService {
+export class UserServiceImpl implements UserService {
   constructor(private userRepository: Repository<User>) {}
 
   create(createProfileDto: CreateUserDto) {
@@ -20,19 +22,32 @@ export class UserService {
     });
   }
 
-  findOne(fields: EntityCondition<User>): Promise<User> {
+  getFilteredUsers(
+    _options: PaginationOptions,
+    _query: string,
+  ): Promise<Array<User>> {
+    return this.userRepository.find({});
+  }
+
+  getUserById(id: string): Promise<User> {
     return this.userRepository.findOneOrFail({
-      where: fields,
+      where: { id },
     });
   }
 
-  update(_id: string, _updateProfileDto: UpdateUserDto) {
-    // return this.userRepository.save(
-    //   this.userRepository.create({
-    //     id,
-    //     ...updateProfileDto,
-    //   }),
-    // );
+  getUserByEmail(email: string): Promise<User> {
+    return this.userRepository.findOneOrFail({
+      where: { email },
+    });
+  }
+
+  updateUser(id: string, updateProfileDto: UpdateUserDto) {
+    return this.userRepository.save(
+      this.userRepository.create({
+        id,
+        ...updateProfileDto,
+      }),
+    );
   }
 
   async softDelete(id: string): Promise<void> {
