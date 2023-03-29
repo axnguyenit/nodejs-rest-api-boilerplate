@@ -1,7 +1,5 @@
 import type { Repository } from 'typeorm';
 
-import type { Logger } from '~/core';
-import { LoggerImpl } from '~/core';
 import { TypeOrmService } from '~/database/typeorm.service';
 import type { AuthService } from '~/modules/auth';
 import { AuthServiceImpl } from '~/modules/auth';
@@ -10,8 +8,8 @@ import type { Role } from '~/modules/role/entities/role.entity';
 import type { User, UserService } from '~/modules/user';
 import { UserRepository, UserServiceImpl } from '~/modules/user';
 
-import { JwtService } from './jwt';
-import { ConfigService } from './services/config.service';
+import type { Logger } from '..';
+import { ConfigService, JwtService, LoggerImpl } from '..';
 
 export class DI {
   private static singleton: DI;
