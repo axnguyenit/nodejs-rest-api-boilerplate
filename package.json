@@ -9,9 +9,11 @@
     "~": "dist"
   },
   "scripts": {
-    "watch": "nodemon --watch './**/*.{ts,graphql}' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/main.ts",
+    "watch": "nodemon --watch './**/*.ts'",
     "dev": "tsc-watch --onSuccess \"yarn watch\"",
-    "start": "node -r module-alias/register ./dist --env=production",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "start": "node ./dist/main.js",
     "postinstall": "husky install",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
@@ -87,9 +89,13 @@
     ],
     "ext": "ts",
     "ignore": [
-      "src/public"
+      "src/public",
+      "dist",
+      "node_modules"
     ],
-    "exec": "./node_modules/.bin/ts-node --files -r tsconfig-paths/register ./src"
+    "execMap": {
+      "ts": "node -r ts-node/register"
+    }
   },
   "engines": {
     "node": ">=14.0.0"
@@ -98,7 +104,7 @@
     "src/**/*.{ts, tsx}": [
       "eslint --fix",
       "prettier --write",
-      "git add"
+      "git add ."
     ]
   }
 }
