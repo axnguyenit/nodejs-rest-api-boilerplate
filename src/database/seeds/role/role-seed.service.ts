@@ -1,7 +1,7 @@
 import type { Repository } from 'typeorm';
 
 import type { Role } from '~/modules/role';
-import { AppRole } from '~/modules/role';
+// import { AppRole } from '~/modules/role';
 
 export class RoleSeedService {
   constructor(private repository: Repository<Role>) {}
