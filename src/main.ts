@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import 'module-alias/register';
 
-// import 'module-alias/register'; // need to enable when build
 import { App } from './app';
 import { DI } from './providers';
 
