@@ -2,10 +2,14 @@
 
 import readline from 'node:readline';
 
-import colors from 'picocolors';
-
 export type LogType = 'error' | 'info';
 export type LogLevel = LogType | 'silent';
+
+/// ANSI Control Sequence Introducer, signals the terminal for new settings.
+const ansiEsc = '\u001B[';
+
+/// Reset all colors and options for current SGRs to terminal defaults.
+const ansiDefault = `${ansiEsc}0m`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type LogMessage = any;
@@ -41,6 +45,24 @@ export class LoggerImpl implements Logger {
 
   private sameCount = 0;
 
+  private topLeftCorner = '┌';
+
+  private topRightCorner = '┐';
+
+  private bottomLeftCorner = '└';
+
+  private bottomRightCorner = '┘';
+
+  private middleLeftCorner = '├';
+
+  private middleRightCorner = '┤';
+
+  private verticalLine = '│';
+
+  private doubleDivider = '─';
+
+  private lineLength = 100;
+
   constructor(
     level: LogLevel = 'info',
     { isAllowClearScreen = true }: LoggerOptions = {},
@@ -51,12 +73,12 @@ export class LoggerImpl implements Logger {
     this.thresh = LogLevels[level];
   }
 
-  info(msg: LogMessage, opts) {
-    this.output('info', msg, opts);
+  info(msg: LogMessage, opts: LogOptions) {
+    this.output('info', msg, opts, 12);
   }
 
-  error(msg: LogMessage, opts) {
-    this.output('error', msg, opts);
+  error(msg: LogMessage, opts: LogOptions) {
+    this.output('error', msg, opts, 196);
   }
 
   private clearScreen() {
@@ -67,36 +89,68 @@ export class LoggerImpl implements Logger {
     readline.clearScreenDown(process.stdout);
   }
 
-  private output(type: LogType, msg: LogMessage, options?: LogOptions) {
+  private output(
+    type: LogType,
+    msg: LogMessage,
+    options?: LogOptions,
+    fg?: number,
+  ) {
+    if (process.env.NODE_ENV === 'production') return;
+
+    const method = type === 'info' ? 'log' : type;
+    let doubleDividerLine = '';
+    let singleDividerLine = '';
+
+    for (let i = 0; i < this.lineLength - 2; i++) {
+      doubleDividerLine += this.doubleDivider;
+      singleDividerLine += this.doubleDivider;
+    }
+
+    const topBorder = `${this.topLeftCorner}${doubleDividerLine}${this.topRightCorner}`;
+    const middleBorder = `${this.middleLeftCorner}${singleDividerLine}${this.middleRightCorner}`;
+    const bottomBorder = `${this.bottomLeftCorner}${doubleDividerLine}${this.bottomRightCorner}`;
     const prefix = options?.prefix ? `[${options?.prefix}]` : '[ax]';
     const objString = JSON.stringify(msg);
 
+    const log = (count?: number) => {
+      console[method](this.wrapColor(topBorder, fg));
+      console[method](
+        `${this.wrapColor(this.verticalLine, fg)} ${this.wrapColor(
+          new Date().toLocaleTimeString(),
+          232,
+        )}`,
+      );
+      console[method](this.wrapColor(middleBorder, fg));
+      console[method](
+        `${this.wrapColor(
+          `${this.verticalLine} ${prefix} ${objString}  ${
+            count ? `${ansiEsc}33m(x${this.sameCount + 1})${ansiDefault}` : ''
+          }`,
+          fg,
+        )}`,
+      );
+      console[method](this.wrapColor(bottomBorder, fg));
+    };
+
     if (this.thresh >= LogLevels[type]) {
-      const method = type === 'info' ? 'log' : type;
-
-      const format = () => {
-        const message =
-          type === 'info'
-            ? colors.blue(colors.bold(`${prefix} ${objString}`))
-            : colors.red(colors.bold(`${prefix} ${objString}`));
-
-        return `${colors.dim(new Date().toLocaleTimeString())} ${message}`;
-      };
-
       if (this.canClearScreen) {
         if (type === this.lastType && objString === this.lastMessage) {
-          console[method](format(), colors.yellow(`(x${this.sameCount + 1})`));
           this.sameCount++;
+          log(this.sameCount);
           this.clearScreen();
         } else {
           this.sameCount = 0;
           this.lastMessage = objString;
           this.lastType = type;
-          console[method](format());
+          log();
         }
       } else {
-        console[method](format());
+        log();
       }
     }
+  }
+
+  private wrapColor(message: string, fg?: number): string {
+    return `${ansiEsc}38;5;${fg}m${message}${ansiDefault}`;
   }
 }
